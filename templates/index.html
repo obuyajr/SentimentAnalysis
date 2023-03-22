@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sentiment Analysis</title>
+  </head>
+  <body>
+    <h1>Sentiment Analysis</h1>
+    <form method="POST" enctype="multipart/form-data" action="/sentiment">
+      <label for="file">Select a CSV file:</label>
+      <input type="file" name="file" accept=".csv" />
+      <br />
+      <input type="submit" value="Submit" />
+    </form>
+    <br />
+    {% if csv_data %}
+    <h2>Results</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Text</th>
+          <th>Sentiment</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in csv_data %}
+        <tr>
+          <td>{{ row.text }}</td>
+          <td>{{ row.sentiment }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </body>
+</html>
