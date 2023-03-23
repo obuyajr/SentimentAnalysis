@@ -1,58 +1,92 @@
-import torch
-from transformers import BertTokenizer, BertForSequenceClassification
+from flask import Flask, render_template, request, session
 import pandas as pd
-from flask import Flask, jsonify, request
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from pandas.io.json import json_normalize
+import csv
+import os
 
-# Load the pre-trained model and tokenizer
-model = BertForSequenceClassification.from_pretrained("bert-base-uncased")
-tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
+# Sentiment analysis function using VADER
+def vader_sentiment_scores(data_frame):
+    # Define SentimentIntensityAnalyzer object of VADER.
+    SID_obj = SentimentIntensityAnalyzer()
 
-# Set the device to use for inference
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
+    # calculate polarity scores which gives a sentiment dictionary,
+    # Contains pos, neg, neu, and compound scores.
+    sentiment_list = []
+    for row_num in range(len(data_frame)):
+        sentence = data_frame['Review'][row_num]
 
-# Load the CSV file
-data = pd.read_csv("data.csv")
+        polarity_dict = SID_obj.polarity_scores(sentence)
 
-# Initialize the Flask application
-app = Flask(__name__)
+        # Calculate overall sentiment by compound score
+        if polarity_dict['compound'] >= 0.05:
+            sentiment_list.append("Positive")
 
-# Define a function to perform sentiment analysis on a given text
-def predict_sentiment(text):
-    # Tokenize the text
-    inputs = tokenizer.encode_plus(
-        text,
-        add_special_tokens=True,
-        max_length=512,
-        padding="max_length",
-        truncation=True,
-        return_tensors="pt",
-    )
+        elif polarity_dict['compound'] <= - 0.05:
+            sentiment_list.append("Negative")
 
-    # Move the inputs to the appropriate device
-    input_ids = inputs["input_ids"].to(device)
-    attention_mask = inputs["attention_mask"].to(device)
+        else:
+            sentiment_list.append("Neutral")
 
-    # Perform inference
-    outputs = model(input_ids, attention_mask)
-    logits = outputs.logits
-    predictions = torch.argmax(logits, dim=1).tolist()
+    data_frame['Sentiment'] = sentiment_list
 
-    # Return the predicted sentiment label
-    return predictions[0]
+    return data_frame
 
-# Define a route to perform sentiment analysis on the CSV data
-@app.route("/sentiment", methods=["POST"])
-def predict_sentiment_csv():
-    # Load the CSV data
-    data = pd.read_csv(request.files["file"])
 
-    # Perform sentiment analysis on each row
-    data["sentiment"] = data["text"].apply(predict_sentiment)
+#*** Backend operation
+# Read comment csv data
+# df = pd.read_csv('data/comment.csv')
 
-    # Return the CSV data with the predicted sentiment labels
-    return data.to_csv(index=False)
+# WSGI Application
+# Provide template folder name
+# The default folder name should be "templates" else need to mention custom folder name
+app = Flask(__name__, template_folder='templates')
 
-# Run the Flask application
-if __name__ == "__main__":
-    app.run(debug=True)
+app.secret_key = 'You Will Never Guess'
+
+# @app.route('/')
+# def welcome():
+#     return "Ths is the home page of Flask Application"
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/',  methods=("POST", "GET"))
+def uploadFile():
+    if request.method == 'POST':
+        uploaded_file = request.files['uploaded-file']
+        df = pd.read_csv(uploaded_file,usecols=['Review','StarRating','Product'], encoding='unicode_escape')
+        
+        session['uploaded_csv_file'] = df.to_json()
+        return render_template('index2.html')
+
+@app.route('/show_data',methods=("POST", "GET"))
+def showData():
+    # Get uploaded csv file from session as a json value
+    uploaded_json = session.get('uploaded_csv_file', None)
+    # Convert json to data frame
+    uploaded_json = uploaded_json.replace('true', 'True')
+    uploaded_json = uploaded_json.replace('false', 'False')
+    
+    uploaded_df = pd.DataFrame.from_dict(eval(str(uploaded_json)))
+    
+    # Convert dataframe to html format
+    uploaded_df_html = uploaded_df.to_html()
+    return render_template('show_data.html', data=uploaded_df_html)
+
+@app.route('/sentiment', methods=("POST", "GET"))
+def SentimentAnalysis():
+    # Get uploaded csv file from session as a json value
+    uploaded_json = session.get('uploaded_csv_file', None)
+    uploaded_json = uploaded_json.replace('true', 'True')
+    uploaded_json = uploaded_json.replace('false', 'False')
+    # Convert json to data frame
+    uploaded_df = pd.DataFrame.from_dict(eval(str(uploaded_json)))
+    # Apply sentiment function to get sentiment score
+    uploaded_df_sentiment = vader_sentiment_scores(uploaded_df)
+    uploaded_df_html = uploaded_df_sentiment.to_html()
+    return render_template('show_data.html', data=uploaded_df_html)
+
+if __name__=='__main__':
+    app.run(debug = True)
