@@ -9,3 +9,9 @@ The project consists of a Python script that takes a text file containing social
 Requirements
 Python 3.x and above
 Vader Sentiment Analysis package
+
+Contributing
+Contributions are always welcome! If you find a bug or have a suggestion for a new feature, please open an issue or submit a pull request.
+
+Contact
+If you have any questions or comments about this project, feel free to contact the author at felix37brock.com.
