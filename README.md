@@ -14,4 +14,5 @@ Contributing
 Contributions are always welcome! If you find a bug or have a suggestion for a new feature, please open an issue or submit a pull request.
 
 Contact
-If you have any questions or comments about this project, feel free to contact the author at felix37brock.com.
+If you have any questions or comments about this project, feel free to contact the author at felix37brock@gmail.com
+https://www.linkedin.com/in/felix-o-7498ba133/?lipi=urn%3Ali%3Apage%3Ad_flagship3_feed%3BmTPszi9yRSq9YkMVw8qy8g%3D%3D
