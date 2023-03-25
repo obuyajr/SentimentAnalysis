@@ -4,6 +4,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from pandas.io.json import json_normalize
 import csv
 import os
+# import matplotlib.pyplot as plt
 
 # Sentiment analysis function using VADER
 def vader_sentiment_scores(data_frame):
@@ -14,7 +15,7 @@ def vader_sentiment_scores(data_frame):
     # Contains pos, neg, neu, and compound scores.
     sentiment_list = []
     for row_num in range(len(data_frame)):
-        sentence = data_frame['Review'][row_num]
+        sentence = data_frame['review'][row_num]
 
         polarity_dict = SID_obj.polarity_scores(sentence)
 
@@ -56,7 +57,7 @@ def index():
 def uploadFile():
     if request.method == 'POST':
         uploaded_file = request.files['uploaded-file']
-        df = pd.read_csv(uploaded_file,usecols=['Review','StarRating','Product'], encoding='unicode_escape')
+        df = pd.read_csv(uploaded_file,usecols=['id','language','review'], encoding='unicode_escape')
         
         session['uploaded_csv_file'] = df.to_json()
         return render_template('index2.html')
@@ -87,6 +88,36 @@ def SentimentAnalysis():
     uploaded_df_sentiment = vader_sentiment_scores(uploaded_df)
     uploaded_df_html = uploaded_df_sentiment.to_html()
     return render_template('show_data.html', data=uploaded_df_html)
+
+
+# @app.route('/graph', methods=("POST", "GET"))
+# def graphicalRep():
+      
+    
+
+#     # Group the results by sentiment
+#     sentiment_counts = uploaded_df_sentiment.groupby('sentiment').count()
+
+#     # Create a bar chart of the sentiment counts
+#     fig, ax = plt.subplots()
+#     sentiment_counts.plot(kind='bar', ax=ax)
+
+#     # Set the chart title and axis labels
+#     ax.set_title('Sentiment Analysis Results')
+#     ax.set_xlabel('Sentiment')
+#     ax.set_ylabel('Count')
+
+#     # Save the chart to a PNG image in memory
+#     img = io.BytesIO()
+#     plt.savefig(img, format='png')
+#     img.seek(0)
+
+#     # Encode the PNG image in base64
+#     chart_url = base64.b64encode(img.getvalue()).decode()
+
+#     # Render the HTML template with the chart embedded
+#     return render_template('graphd.html', chart_url=chart_url)
+
 
 if __name__=='__main__':
     app.run(debug = True)
