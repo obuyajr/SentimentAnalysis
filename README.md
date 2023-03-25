@@ -7,8 +7,11 @@ Description
 The project consists of a Python script that takes a text file containing social media posts as input and outputs the sentiment score for each post. The sentiment score is a float value between -1 and 1, where a score of -1 indicates extremely negative sentiment, 0 indicates neutral sentiment, and 1 indicates extremely positive sentiment.
 
 Requirements
-Python 3.x and above
-Vader Sentiment Analysis package
+-1st- create a folder for you project(name it)
+-run the terminal and install flask
+-create a virtual environment for your project
+-There is a requrements.txt files that contains all the necessarry packages to be installed on the virtual environment you have created.
+-you are then set to go......................
 
 Contributing
 Contributions are always welcome! If you find a bug or have a suggestion for a new feature, please open an issue or submit a pull request.
