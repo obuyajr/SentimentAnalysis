@@ -1,4 +1,4 @@
-# SentimentAnalysis
+# SentimentAnalysis web application 
 
 Vader Sentiment Analysis
 This project is an implementation of Vader Sentiment Analysis using Python. Vader (Valence Aware Dictionary and sEntiment Reasoner) is a rule-based sentiment analysis tool that is specifically tuned for social media.
@@ -14,7 +14,7 @@ Requirements
 -you are then set to go......................
 
 Contributing
-Contributions are always welcome! If you find a bug or have a suggestion for a new feature, please open an issue or submit a pull request.
+Contributions are always welcome! If you find a bug or have a suggestion for a new feature, please open an issue or submit a pull request and i will seee to it that we come up with better implementation of this amazing project.
 
 Contact
 If you have any questions or comments about this project, feel free to contact the author at felix37brock@gmail.com
