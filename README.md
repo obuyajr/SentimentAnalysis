@@ -13,7 +13,7 @@ Requirements
 -There is a requrements.txt files that contains all the necessarry packages to be installed on the virtual environment you have created.
 -you are then set to go......................
 
-Contributing
+Contributing to the project
 Contributions are always welcome! If you find a bug or have a suggestion for a new feature, please open an issue or submit a pull request and i will seee to it that we come up with better implementation of this amazing project.
 
 Contact
