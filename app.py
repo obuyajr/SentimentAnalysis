@@ -90,34 +90,6 @@ def SentimentAnalysis():
     return render_template('show_data.html', data=uploaded_df_html)
 
 
-# @app.route('/graph', methods=("POST", "GET"))
-# def graphicalRep():
-      
-    
-
-#     # Group the results by sentiment
-#     sentiment_counts = uploaded_df_sentiment.groupby('sentiment').count()
-
-#     # Create a bar chart of the sentiment counts
-#     fig, ax = plt.subplots()
-#     sentiment_counts.plot(kind='bar', ax=ax)
-
-#     # Set the chart title and axis labels
-#     ax.set_title('Sentiment Analysis Results')
-#     ax.set_xlabel('Sentiment')
-#     ax.set_ylabel('Count')
-
-#     # Save the chart to a PNG image in memory
-#     img = io.BytesIO()
-#     plt.savefig(img, format='png')
-#     img.seek(0)
-
-#     # Encode the PNG image in base64
-#     chart_url = base64.b64encode(img.getvalue()).decode()
-
-#     # Render the HTML template with the chart embedded
-#     return render_template('graphd.html', chart_url=chart_url)
-
 
 if __name__=='__main__':
     app.run(debug = True)
